@@ -1,8 +1,8 @@
-resolver: nightly-2020-01-30
+#resolver: nightly-2020-01-30
+resolver: lts-17.5
 
 packages:
 - llvm-hs
 - llvm-hs-pure
 
 extra-package-dbs: []
-

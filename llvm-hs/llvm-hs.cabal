@@ -210,7 +210,7 @@ library
     Control.Monad.Trans.AnyCont
 
   include-dirs: src
-  c-sources:
+  cxx-sources:
     src/LLVM/Internal/FFI/AssemblyC.cpp
     src/LLVM/Internal/FFI/AttributeC.cpp
     src/LLVM/Internal/FFI/BitcodeC.cpp
@@ -236,10 +236,10 @@ library
     src/LLVM/Internal/FFI/TypeC.cpp
     src/LLVM/Internal/FFI/ValueC.cpp
 
-  cc-options: -std=c++11
+  cxx-options: -std=c++17
 
   if flag(debug)
-    cc-options: -g
+    cxx-options: -g
 
 test-suite test
   default-language: Haskell2010

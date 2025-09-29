@@ -171,6 +171,7 @@ main = do
 #endif
               PreProcessor {
                   platformIndependent = platformIndependent (origHsc buildInfo),
+                  ppOrdering = \_ _ -> pure,
                   runPreProcessor = \inFiles outFiles verbosity -> do
                       llvmConfig <- getLLVMConfig (configFlags localBuildInfo)
                       llvmCFlags <- do
@@ -182,13 +183,13 @@ main = do
               where origHsc buildInfo' =
                       fromMaybe
                         ppHsc2hs
-                        (lookup "hsc" origHookedPreprocessors)
+                        (lookup (Suffix "hsc") origHookedPreprocessors)
                         buildInfo'
                         localBuildInfo
 #ifdef MIN_VERSION_Cabal_2_0_0
                         componentLocalBuildInfo
 #endif
-      in [("hsc", newHsc)] ++ origHookedPreprocessors,
+      in [(Suffix "hsc", newHsc)] ++ origHookedPreprocessors,
 
     buildHook = \packageDesc localBuildInfo userHooks buildFlags ->
       do addLLVMToLdLibraryPath (configFlags localBuildInfo)

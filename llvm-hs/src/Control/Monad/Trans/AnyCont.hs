@@ -8,6 +8,8 @@ import LLVM.Prelude
 import Control.Monad.Catch
 import Control.Monad.Cont as Cont
 import Control.Monad.Fail as Fail
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Class
 
 newtype AnyContT m a = AnyContT { unAnyContT :: forall r . ContT r m a }
 

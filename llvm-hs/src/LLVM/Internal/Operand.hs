@@ -7,7 +7,8 @@
   QuasiQuotes,
   RecordWildCards,
   ScopedTypeVariables,
-  TemplateHaskell
+  TemplateHaskell,
+  TypeApplications
   #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module LLVM.Internal.Operand where
@@ -23,6 +24,7 @@ import Data.Bits
 import Data.Functor.Identity
 import qualified Data.Map as Map
 import Data.Maybe (mapMaybe)
+import Data.Function (fix)
 
 import Foreign.Ptr
 
@@ -835,10 +837,16 @@ instance EncodeM EncodeAST A.DILocalVariable (Ptr FFI.DILocalVariable) where
     Context c <- gets encodeStateContext
     FFI.upCast <$> liftIO (FFI.getDILocalVariable c scope name file line type' arg flags alignInBits)
 
+commonPartsOfDITemplateParameter :: A.DITemplateParameter
+                                 -> (ShortByteString, Maybe (A.MDRef A.DIType))
+commonPartsOfDITemplateParameter ditp = case ditp of
+  A.DITemplateTypeParameter n t -> (n, t)
+  A.DITemplateValueParameter n t _ _ -> (n, t)
+
 instance EncodeM EncodeAST A.DITemplateParameter (Ptr FFI.DITemplateParameter) where
   encodeM p = do
-    name' <- encodeM (A.name (p :: A.DITemplateParameter)) :: EncodeAST (Ptr FFI.MDString)
-    ty <- encodeM (A.type' (p :: A.DITemplateParameter))
+    name' <- encodeM (fst $ commonPartsOfDITemplateParameter p) :: EncodeAST (Ptr FFI.MDString)
+    ty <- encodeM (snd $ commonPartsOfDITemplateParameter p)
     Context c <- gets encodeStateContext
     case p of
       A.DITemplateTypeParameter {} ->

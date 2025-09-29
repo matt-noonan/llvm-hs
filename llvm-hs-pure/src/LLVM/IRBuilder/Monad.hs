@@ -17,6 +17,7 @@ import qualified Control.Monad.Fail as Fail
 import Control.Monad.Identity
 import qualified Control.Monad.Writer.Lazy as Lazy
 import qualified Control.Monad.Writer.Strict as Strict
+import Control.Monad.Fix (MonadFix)
 import Control.Monad.Writer (MonadWriter)
 import Control.Monad.Reader
 import qualified Control.Monad.RWS.Lazy as Lazy
